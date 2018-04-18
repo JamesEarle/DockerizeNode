@@ -1,0 +1,17 @@
+# Source Node image
+FROM node:latest
+
+# Create application directory
+RUN mkdir -p /usr/src/app
+
+# Copy application files
+COPY ./app/ /usr/src/app/
+
+# Set the working directory for your environment
+WORKDIR /usr/src/app
+
+# Install dependencies
+RUN npm install
+
+# Run application
+CMD npm start
