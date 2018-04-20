@@ -83,10 +83,48 @@ In the portal go to "New Resource" and search for Azure Container registry. Then
 az group create --name MyResourceGroup --location westus
 
 az acr create -g MyResourceGroup --name MyACR --sku Basic --admin-enabled true
+
+az acr login -n MyACR
+
+az acr show -n DockerSampleACR --query loginServer
+
+docker tag dockerizenode dockersampleacr.azurecr.io/dockerizenode:v1
+
+docker push dockersampleacr.azurecr.io/dockerizenode:v1
+
+az acr repository list --name <acrName> --output table
 ```
 
-After this you login to the ACR, then you tag your image and push from docker to this ACR.
+**Azure Cloud Shell does not support any commands that require Docker daemon to run**
+
+
 
 ### Deploy Application
-3. Deploy image to ACR
-    - https://docs.microsoft.com/en-us/azure/container-instances/container-instances-tutorial-deploy-app
+ - [MS Documentation - Deploy App](https://docs.microsoft.com/en-us/azure/container-instances/container-instances-tutorial-deploy-app)
+
+Exposed port in source code must match the port you use in creating container in CLI,
+
+**does not support port forwarding yet** 
+
+Be sure you're logged into to not only Azure CLI, but your ACR specifically when you need to push
+
+```
+az acr show -n DockerSampleACR --query loginServer
+dockersampleacr.azurecr.io
+
+az acr credential show -n DockerSampleACR --query "passwords[0].value"
+
+az container create --resource-group myResourceGroup --name aci-tutorial-app --image <acrLoginServer>/aci-tutorial-app:v1 --cpu 1 --memory 1 --registry-username <acrName> --registry-password <acrPassword> --dns-name-label aci-demo --ports 80
+```
+
+To access your container publicly
+
+```powershell
+az container show -g MyGroup -n MyDNSLabel --query ipAddress.fqdn
+mydnslabel.westus.azurecontainer.io
+# OR
+az container show -g MyGroup -n MyDNSLabel --query ipAddress.ip
+13.92.155.10
+```
+
+
