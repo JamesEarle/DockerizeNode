@@ -12,7 +12,7 @@ WORKDIR /usr/src/app
 
 # Install dependencies
 RUN npm install
-# Expose the correct port
-# EXPOSE 3000
+
 # Run application
 CMD npm start
+
