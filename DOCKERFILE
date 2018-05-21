@@ -13,6 +13,8 @@ WORKDIR /usr/src/app
 # Install dependencies
 RUN npm install
 
+EXPOSE 3000
+
 # Run application
 CMD npm start
 
